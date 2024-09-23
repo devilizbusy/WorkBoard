@@ -1,10 +1,10 @@
-// src/components/Dashboard.js
+// src/components/Dashboard.jsx
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { useGetWorkBoardsQuery } from '../store/api';
+import { useGetBoardsQuery } from '../store/api';
 
 const Dashboard = () => {
-  const { data: workboards, error, isLoading } = useGetWorkBoardsQuery();
+  const { data: boards, error, isLoading } = useGetBoardsQuery();
 
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error: {error.message}</div>;
@@ -26,10 +26,10 @@ const Dashboard = () => {
         <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
           <div className="px-4 py-6 sm:px-0">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {workboards.map((workboard) => (
-                <Link key={workboard.id} to={`/board/${workboard.id}`} className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow">
-                  <h2 className="text-xl font-semibold mb-2">{workboard.title}</h2>
-                  <p className="text-gray-600">{workboard.tasks.length} task(s)</p>
+              {boards?.map((board) => (
+                <Link key={board.id} to={`/board/${board.id}`} className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow">
+                  <h2 className="text-xl font-semibold mb-2">{board.title}</h2>
+                  <p className="text-gray-600">{board.tasks?.length || 0} task(s)</p>
                 </Link>
               ))}
               <Link to="/create" className="bg-white rounded-lg border-2 border-dashed border-gray-300 p-6 flex items-center justify-center hover:border-gray-400 transition-colors">

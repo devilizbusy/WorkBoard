@@ -1,30 +1,24 @@
-# api/models.py
+# workboards_backend/api/models.py
 from django.db import models
-from django.contrib.auth.models import User
 
 class WorkBoard(models.Model):
-    title = models.CharField(max_length=255)
+    name = models.CharField(max_length=100, default="workboards")
     description = models.TextField(blank=True)
-    owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='workboards')
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return self.title
+        return self.name
 
 class Task(models.Model):
     STATUS_CHOICES = [
-        ('todo', 'To Do'),
-        ('inprogress', 'In Progress'),
-        ('completed', 'Completed'),
+        ('To-Do', 'To-Do'),
+        ('In Progress', 'In Progress'),
+        ('Completed', 'Completed'),
     ]
-    title = models.CharField(max_length=255)
+
+    title = models.CharField(max_length=100)
     description = models.TextField(blank=True)
-    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='todo')
-    workboard = models.ForeignKey(WorkBoard, on_delete=models.CASCADE, related_name='tasks')
-    assignee = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='assigned_tasks')
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='To-Do')
+    workboard = models.ForeignKey(WorkBoard, related_name='tasks', on_delete=models.CASCADE)
 
     def __str__(self):
         return self.title

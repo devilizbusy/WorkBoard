@@ -2,51 +2,92 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
 export const api = createApi({
-  baseQuery: fetchBaseQuery({
-    baseUrl: 'http://localhost:8000/api/',
-    prepareHeaders: (headers, { getState }) => {
-      const token = getState().auth.token;
-      if (token) {
-        headers.set('authorization', `Token ${token}`);
-      }
-      return headers;
-    },
-  }),
+  reducerPath: 'api',
+  baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:8000/api' }), // Adjust the base URL as necessary
   endpoints: (builder) => ({
+    // Authentication
     login: builder.mutation({
       query: (credentials) => ({
-        url: 'api-token-auth/',
+        url: '/login/',
         method: 'POST',
         body: credentials,
       }),
     }),
-    getWorkBoards: builder.query({
-      query: () => 'workboards/',
+    logout: builder.mutation({
+      query: () => ({
+        url: '/logout/',
+        method: 'POST',
+      }),
     }),
-    getWorkBoard: builder.query({
-      query: (id) => `workboards/${id}/`,
+    validateToken: builder.query({
+      query: () => '/validate-token/', // Endpoint to validate token
+    }),
+    // Work Boards
+    getWorkBoards: builder.query({
+      query: () => '/workboards/', // Get all work boards
+    }),
+    getWorkBoardById: builder.query({
+      query: (id) => `/workboards/${id}/`, // Get a specific work board by ID
     }),
     createWorkBoard: builder.mutation({
-      query: (newWorkBoard) => ({
-        url: 'workboards/',
+      query: (newBoard) => ({
+        url: '/workboards/',
         method: 'POST',
-        body: newWorkBoard,
+        body: newBoard,
+      }),
+    }),
+    updateWorkBoard: builder.mutation({
+      query: ({ id, ...updatedBoard }) => ({
+        url: `/workboards/${id}/`,
+        method: 'PUT',
+        body: updatedBoard,
+      }),
+    }),
+    deleteWorkBoard: builder.mutation({
+      query: (id) => ({
+        url: `/workboards/${id}/`,
+        method: 'DELETE',
+      }),
+    }),
+
+    // Tasks
+    getTasks: builder.query({
+      query: (boardId) => `/workboards/${boardId}/tasks/`, // Get tasks for a specific work board
+    }),
+    createTask: builder.mutation({
+      query: ({ boardId, newTask }) => ({
+        url: `/workboards/${boardId}/tasks/`,
+        method: 'POST',
+        body: newTask,
       }),
     }),
     updateTask: builder.mutation({
-      query: ({ id, ...patch }) => ({
-        url: `tasks/${id}/`,
-        method: 'PATCH',
-        body: patch,
+      query: ({ boardId, taskId, ...updatedTask }) => ({
+        url: `/workboards/${boardId}/tasks/${taskId}/`,
+        method: 'PUT',
+        body: updatedTask,
+      }),
+    }),
+    deleteTask: builder.mutation({
+      query: ({ boardId, taskId }) => ({
+        url: `/workboards/${boardId}/tasks/${taskId}/`,
+        method: 'DELETE',
       }),
     }),
   }),
 });
 
+// Export hooks for usage in functional components
 export const {
   useLoginMutation,
+  useLogoutMutation,
   useGetWorkBoardsQuery,
-  useGetWorkBoardQuery,
+  useGetWorkBoardByIdQuery,
   useCreateWorkBoardMutation,
+  useUpdateWorkBoardMutation,
+  useDeleteWorkBoardMutation,
+  useGetTasksQuery,
+  useCreateTaskMutation,
   useUpdateTaskMutation,
+  useDeleteTaskMutation,
 } = api;

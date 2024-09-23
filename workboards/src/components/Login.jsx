@@ -1,4 +1,4 @@
-// src/components/Login.js
+// src/components/Login.jsx
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useLoginMutation } from '../store/api';

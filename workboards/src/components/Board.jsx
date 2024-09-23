@@ -1,12 +1,12 @@
-// src/components/Board.js
+// src/components/Board.jsx
 import React from 'react';
 import { useParams } from 'react-router-dom';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
-import { useGetWorkBoardQuery, useUpdateTaskMutation } from '../store/api';
+import { useGetBoardQuery, useUpdateTaskMutation } from '../store/api';
 
 const Board = () => {
   const { id } = useParams();
-  const { data: workboard, error, isLoading } = useGetWorkBoardQuery(id);
+  const { data: board, error, isLoading } = useGetBoardQuery(id);
   const [updateTask] = useUpdateTaskMutation();
 
   if (isLoading) return <div>Loading...</div>;
@@ -26,7 +26,7 @@ const Board = () => {
       return;
     }
 
-    const task = workboard.tasks.find(t => t.id === parseInt(draggableId));
+    const task = board.tasks.find((t) => t.id === parseInt(draggableId));
     const newStatus = destination.droppableId;
 
     try {
@@ -37,9 +37,10 @@ const Board = () => {
   };
 
   const columns = {
-    'todo': { id: 'todo', title: 'To Do', tasks: workboard.tasks.filter(t => t.status === 'todo') },
-    'inprogress': { id: 'inprogress', title: 'In Progress', tasks: workboard.tasks.filter(t => t.status === 'inprogress') },
-    'completed': { id: 'completed', title: 'Completed', tasks: workboard.tasks.filter(t => t.status === 'completed') },
+    'todo': { id: 'todo', title: 'To Do', tasks: board.tasks.filter((t) => t.status === 'todo') },
+    'inprogress': { id: 'inprogress', title: 'In Progress', tasks: board.tasks.filter((t) =>
+ t.status === 'inprogress') },
+    'completed': { id: 'completed', title: 'Completed', tasks: board.tasks.filter((t) => t.status === 'completed') },
   };
 
   return (
@@ -47,8 +48,8 @@ const Board = () => {
       <header className="bg-white shadow">
         <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8 flex justify-between items-center">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">{workboard.title}</h1>
-            <p className="mt-1 text-sm text-gray-600">{workboard.description}</p>
+            <h1 className="text-3xl font-bold text-gray-900">{board.title}</h1>
+            <p className="mt-1 text-sm text-gray-600">{board.description}</p>
           </div>
           <button className="bg-gray-200 rounded-full w-10 h-10 flex items-center justify-center text-gray-700 font-semibold">
             A

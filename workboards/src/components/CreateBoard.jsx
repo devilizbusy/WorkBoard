@@ -1,23 +1,21 @@
-// src/components/CreateBoard.js
+// src/components/CreateBoard.jsx
 import React, { useState } from 'react';
-import { useCreateWorkBoardMutation } from '../store/api';
+import { useCreateBoardMutation } from '../store/api';
 import { useHistory } from 'react-router-dom';
 
 const CreateBoard = () => {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
-  const [createWorkBoard, { isLoading }] = useCreateWorkBoardMutation();
+  const [createBoard, { isLoading }] = useCreateBoardMutation();
   const history = useHistory();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const newWorkBoard = await createWorkBoard({ title, description }).unwrap();
-      history.push(`/boar
-
-d/${newWorkBoard.id}`);
+      const newBoard = await createBoard({ title, description }).unwrap();
+      history.push(`/board/${newBoard.id}`);
     } catch (err) {
-      console.error('Failed to create the work board:', err);
+      console.error('Failed to create the board:', err);
     }
   };
 
@@ -59,7 +57,7 @@ d/${newWorkBoard.id}`);
                   placeholder="Board Description"
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
-                  rows="3"
+                  rows={3}
                 ></textarea>
               </div>
               <div className="flex items-center justify-between">
